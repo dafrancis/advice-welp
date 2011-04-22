@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'haml'
-require 'open-uri'
 require 'RMagick'
 
 get '/' do

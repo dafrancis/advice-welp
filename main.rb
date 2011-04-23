@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'haml'
 require 'RMagick'
+require 'open-uri'
 
 get '/' do
   haml :index
@@ -13,6 +14,7 @@ end
 get '/:top/:bottom/' do
   @top = params[:top]
   @bottom = params[:bottom]
+  #@tinyurl = tinyurl this_url
   haml :welp
 end
 
@@ -59,6 +61,17 @@ def text_split(chars, text)
     end
   end
 end
+
+
+helpers do
+  def base_url
+    @base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+  end
+  
+  def tinyurl(url)
+    open("http://tinyurl.com/api-create.php?url=#{url}").read
+  end
+end
 __END__
 @@ layout
 !!! 5
@@ -83,5 +96,6 @@ __END__
   %input{:type=>'submit',:value=>'MAKE'}
 
 @@ welp
-%img{:alt=>"",:src=>"/images/#{@top}/#{@bottom}"}
+%img{:alt=>"",:src=>"/images/#{URI.escape(@top)}/#{URI.escape(@bottom)}"}
+= tinyurl request.url
 = haml :index

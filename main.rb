@@ -14,12 +14,15 @@ end
 get '/:top/:bottom/' do
   @top = params[:top]
   @bottom = params[:bottom]
-  #@tinyurl = tinyurl this_url
   haml :welp
 end
 
 get '/images/:top/:bottom' do
   magick_image 'advicewelp.png', params[:top], params[:bottom]
+end
+
+get '/tinyurl/*' do
+  tinyurl base_url + URI.encode(params[:splat][0])
 end
 
 def magick_image(image, top, bottom)
@@ -62,12 +65,11 @@ def text_split(chars, text)
   end
 end
 
-
-helpers do
+helpers do  
   def base_url
-    @base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+    @base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/"
   end
-  
+
   def tinyurl(url)
     open("http://tinyurl.com/api-create.php?url=#{url}").read
   end

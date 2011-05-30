@@ -37,9 +37,8 @@ def magick_image(image, top, bottom)
 end
 
 def add_text(img, text, pos)
-  n = false
   tt = Magick::Draw.new
-  tt.annotate(img, 0, 0, 3, 18, text.length>15 ? text_split(15, text.upcase) : text.upcase) do
+  tt.annotate(img, 0, 0, 3, 18, word_wrap(text.upcase)) do
     self.font = 'Arial'
     self.pointsize = 36
     self.font_weight = Magick::BoldWeight
@@ -49,20 +48,12 @@ def add_text(img, text, pos)
   end
 end
 
-def text_split(chars, text)
-  splitted = text.split
-  str = splitted.shift
-  chart = str.length
-  splitted.inject(str) do |r,e|
-    if chart + e.length >= chars
-      chart +=e.length
-      chart -= chars
-      r+"\n"+e
-    else
-      chart +=e.length+1
-      r+" "+e
-    end
-  end
+def caption(img, text, pos)
+  img[:caption] = text
+end
+
+def word_wrap(text, chars=15)
+  text.gsub(/(.{1,#{chars}})(?: +|$)\n?|(.{#{chars}})/, "\\1\\2\n").chomp
 end
 
 helpers do  

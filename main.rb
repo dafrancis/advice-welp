@@ -22,7 +22,11 @@ get '/images/:top/:bottom' do
 end
 
 get '/tinyurl/*' do
-  tinyurl "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{URI.encode(params[:splat][0])}/"
+  tinyurl params[:splat][0]
+end
+
+def get_url(params)
+  "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{URI.encode(params)}/"
 end
 
 def magick_image(image, top, bottom)

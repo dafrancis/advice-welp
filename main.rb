@@ -22,7 +22,7 @@ get '/images/:top/:bottom' do
 end
 
 get '/tinyurl/*' do
-  tinyurl base_url + URI.encode(params[:splat][0])
+  tinyurl "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{URI.encode(params[:splat][0])}/"
 end
 
 def magick_image(image, top, bottom)
@@ -57,10 +57,6 @@ def word_wrap(text, chars=15)
 end
 
 helpers do  
-  def base_url
-    @base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/"
-  end
-
   def tinyurl(url)
     open("http://tinyurl.com/api-create.php?url=#{url}").read
   end

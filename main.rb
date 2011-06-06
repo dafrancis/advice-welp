@@ -1,7 +1,8 @@
-require 'sinatra'
-require 'haml'
-require 'RMagick'
-require 'open-uri'
+%w(sinatra haml RMagick open-uri).each{|lib| require lib}
+#require 'sinatra'
+#require 'haml'
+#require 'RMagick'
+#require 'open-uri'
 
 get '/' do
   haml :index
@@ -12,9 +13,7 @@ post '/' do
 end
 
 get '/:top/:bottom/' do
-  @top = params[:top]
-  @bottom = params[:bottom]
-  haml :welp
+  haml :welp, :locals => params
 end
 
 get '/images/:top/:bottom' do
@@ -52,10 +51,6 @@ def add_text(img, text, pos)
   end
 end
 
-def caption(img, text, pos)
-  img[:caption] = text
-end
-
 def word_wrap(text, chars=15)
   text.gsub(/(.{1,#{chars}})(?: +|$)\n?|(.{#{chars}})/, "\\1\\2\n").chomp
 end
@@ -89,6 +84,6 @@ __END__
   %input{:type=>'submit',:value=>'MAKE'}
 
 @@ welp
-%img{:alt=>"",:src=>"/images/#{URI.escape(@top)}/#{URI.escape(@bottom)}"}
+%img{:alt=>"",:src=>"/images/#{URI.escape(top)}/#{URI.escape(bottom)}"}
 = tinyurl request.url
 = haml :index

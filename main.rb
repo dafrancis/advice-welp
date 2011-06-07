@@ -1,47 +1,24 @@
-%w(sinatra haml RMagick open-uri).each{|lib| require lib}
-#require 'sinatra'
-#require 'haml'
-#require 'RMagick'
-#require 'open-uri'
+%w[sinatra haml RMagick open-uri].each{|lib| require lib}
 
-get '/' do
-  haml :index
-end
+get '/' do haml :index end
 
-post '/' do
-  redirect "/#{params[:top]}/#{params[:bottom]}/"  
-end
+post '/' do redirect "/#{params[:top]}/#{params[:bottom]}/" end
 
-get '/:top/:bottom/' do
-  haml :welp, :locals => params
-end
+get '/:top/:bottom/' do haml :welp, :locals => params end
 
 get '/images/:top/:bottom' do
-  magick_image 'advicewelp.png', params[:top], params[:bottom]
-end
-
-get '/tinyurl/*' do
-  tinyurl params[:splat][0]
-end
-
-def get_url(params)
-  "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{URI.encode(params)}/"
-end
-
-def magick_image(image, top, bottom)
-  img = Magick::Image.read(image).first
-
-  add_text(img,top,Magick::NorthGravity)
-  add_text(img,bottom,Magick::SouthGravity)
-
-  img.format = 'jpeg'
-  content_type 'image/jpeg'
+  img = Magick::Image.read('advicewelp.png').first
+  params.each{|k,v| add_text(img, v, {"top"=>Magick::NorthGravity,"bottom"=>Magick::SouthGravity}[k])}
+  content_type 'image/png'
   img.to_blob
 end
 
+get '/tinyurl/*' do
+  tinyurl "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{URI.encode(params[:splat][0])}/"
+end
+
 def add_text(img, text, pos)
-  tt = Magick::Draw.new
-  tt.annotate(img, 0, 0, 3, 18, word_wrap(text.upcase)) do
+  Magick::Draw.new.annotate(img, 0, 0, 3, 18, word_wrap(text)) do
     self.font = 'Arial'
     self.pointsize = 36
     self.font_weight = Magick::BoldWeight
@@ -51,8 +28,8 @@ def add_text(img, text, pos)
   end
 end
 
-def word_wrap(text, chars=15)
-  text.gsub(/(.{1,#{chars}})(?: +|$)\n?|(.{#{chars}})/, "\\1\\2\n").chomp
+def word_wrap(text)
+  text.gsub(/(.{1,15})(?: +|$)\n?|(.{15})/, "\\1\\2\n").chomp.upcase
 end
 
 helpers do  

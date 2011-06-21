@@ -63,4 +63,7 @@ __END__
 @@ welp
 %img{:alt=>"",:src=>"/images/#{URI.escape(top)}/#{URI.escape(bottom)}"}
 = tinyurl request.url
+= '<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=208966502479582&amp;xfbml=1"></script><fb:like href="'+request.url+'" send="true" width="450" show_faces="true" font=""></fb:like>'
+= '<a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-via="Afal" data-related="welp">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>'
+= '<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script><fb:comments href="'+request.url+'" num_posts="2" width="500"></fb:comments>'
 = haml :index

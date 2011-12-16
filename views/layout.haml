@@ -1,0 +1,13 @@
+!!! 5
+%html
+  %head
+    %meta{:charset=>'utf-8'}
+    %title= "Advice welp: " + ((text = params[:top].to_s+'/'+params[:bottom].to_s) == '/' ? "New" : text.upcase)
+    %style
+      body,form{width:800px;margin:auto;text-transform:uppercase;font-size:48px;font-family:Helvetica}
+      img{width:400px;margin:20px 200px;}
+      input{color:black;width:70%;font-size:48px;font-family:Helvetica;margin:auto;text-transform:uppercase;}
+      form{margin-top:20px}
+  %body
+    = yield
+

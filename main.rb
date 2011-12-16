@@ -1,9 +1,9 @@
-require 'sinatra'
+require 'sinatra/base'
 require 'haml' 
 require 'RMagick'
 require 'open-uri'
 
-class AdviceWelp
+class AdviceWelp < Sinatra::Base
   get '/' do
     haml :index
   end
